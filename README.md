@@ -8,4 +8,4 @@ Si on veut des volumes moyens par profils, il faudra faire appel à la fonction 
 
 ## Dénitrification
 
-La fonction Denitri permet de calculer 
+La fonction Denitri permet de calculer des volumes de PSC NAT en dessous de la tropopause, donc de quantifier la dénitrification sur des fichiers hdf journaliers. La fonction Denitrimonth permet de le faire mensuellement. 
