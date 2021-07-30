@@ -26,7 +26,7 @@ def denitrification_month(year, month, latsize=2, lonsize=15):
         if y is None:
             continue
 
-        nbNAT=nbNAT+y
+        nbNAT=nbNAT+y    #Attention si on somme, il va falloir diviser par le nombre de jours donc de fichiers !
 
  
     return(nbNAT)
