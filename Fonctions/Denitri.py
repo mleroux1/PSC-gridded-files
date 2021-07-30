@@ -4,9 +4,6 @@ import xarray as xr
 import matplotlib.pyplot as plt
 
 
-# test
-
-
 def denitrification(filesmonth,latsize,lonsize):
     try:
         data=xr.open_dataset(filesmonth, engine='pynio')
@@ -46,7 +43,8 @@ def denitrification(filesmonth,latsize,lonsize):
             jdx=(L>lonj)&(L<(lonj+15))&idx
             map_den[i,j]=jdx.sum()
             
-    map_den=[i*0.180*0.9*5 for i in map_den]
+    map_den=[i*0.180*0.09*5 for i in map_den]
             
     data.close()   
     return(map_den)
+
