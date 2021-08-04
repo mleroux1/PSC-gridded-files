@@ -1,7 +1,10 @@
 #!/usr/bin/env python
+
+# Importation modules 
 import xarray as xr
 import numpy as np
 
+# Définition d'une grille 2D contenant les volumes de n (avec n= STS ou NAT ou ICE ou TSTS, etc...)
 def grid_points(latsize, lonsize, n, idx, lat, long):
     
     latbin=[-79.85915 , -78.59155 , -77.323944, -76.056335, -74.788734, -73.521126,
@@ -23,6 +26,7 @@ def grid_points(latsize, lonsize, n, idx, lat, long):
        300. , 302.5, 305. , 307.5, 310. , 312.5, 315. , 317.5, 320. , 322.5,
        325. , 327.5, 330. , 332.5, 335. , 337.5, 340. , 342.5, 345. , 347.5,
        350. , 352.5, 355. , 357.5, 360]
+    
     mapV=np.zeros([len(latbin),len(longbin)])
     
     if idx.sum()>0:
@@ -37,7 +41,7 @@ def grid_points(latsize, lonsize, n, idx, lat, long):
 
     return mapV
 
-
+# Volumes journaliers à partir d'un fichier hdf
 def map_volume(filemonth,latsize,lonsize):
     try:
         data=xr.open_dataset(filemonth)
@@ -51,10 +55,10 @@ def map_volume(filemonth,latsize,lonsize):
     compo=data.PSC_Composition 
     mask=data.PSC_Feature_Mask
     
+    # Les longitudes vont de 0° à 360°, or dans CALIPSO elles vont de -180° à 180° donc il faut les modifiers.
     idx=(long<0)
     long[idx]=long[idx]+360.
     
-
     latbin=[-79.85915 , -78.59155 , -77.323944, -76.056335, -74.788734, -73.521126,
        -72.253525, -70.985916, -69.71831 , -68.45071 , -67.1831  , -65.91549 ,
        -64.64789 , -63.380283, -62.112675, -60.84507 , -59.577465, -58.30986 ,
