@@ -7,9 +7,9 @@ import numpy as np
 
 ##Calcul des volumes d'air froid (TSTS, TNAT, TICE) 
 
-da = xr.open_dataset('ta_Amon_IPSL-CM6A-LR_midHolocene_r1i1p1f2_gr_185001-204912.nc')
+da = xr.open_dataset('ta_Amon_IPSL-CM6A-LR_midHolocene_r1i1p1f2_gr_185001-204912.nc')         # Ouverture sortie de modèle CMIP6 de la variable Ta du modèle IPSL, possibilité de prendre un autre modèle
 
-ds= da.sel(lat=slice(-80,-50),plev=slice(15000,868))
+ds= da.sel(lat=slice(-80,-50),plev=slice(15000,868))                                          # Extraction de données directement dans la fonction
 
 lat=ds.lat
 lon=ds.lon
