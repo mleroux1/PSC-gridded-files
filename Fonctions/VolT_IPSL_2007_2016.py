@@ -1,15 +1,18 @@
 #!/usr/bin/env python
 #!/bin/bash
 
+## Calcul des volumes d'air froid (TSTS, TNAT, TICE) sur la période 2007 à 2016.
+
+# Importation modules
 import xarray as xr
 import matplotlib.pyplot as plt
 import numpy as np
 
-##Calcul des volumes d'air froid (TSTS, TNAT, TICE) 
+# Ouverture sortie de modèle CMIP6 de la variable Ta du modèle IPSL sur la période midholocène, possibilité de prendre un autre modèle.
+da = xr.open_dataset('ta_Amon_IPSL-CM6A-LR_midHolocene_r1i1p1f2_gr_185001-204912.nc')          
 
-da = xr.open_dataset('ta_Amon_IPSL-CM6A-LR_midHolocene_r1i1p1f2_gr_185001-204912.nc')         # Ouverture sortie de modèle CMIP6 de la variable Ta du modèle IPSL, possibilité de prendre un autre modèle
-
-ds= da.sel(lat=slice(-80,-50),plev=slice(15000,868))                                          # Extraction de données directement dans la fonction
+# Extraction de données
+ds= da.sel(lat=slice(-80,-50),plev=slice(15000,868))                                          
 
 lat=ds.lat
 lon=ds.lon
@@ -20,6 +23,7 @@ time=ds.time
 latbin=lat.values
 longbin=lon.values
 
+# Définition des conditions de températures seuils
 Tsts=192
 Tnat=195.7
 Tice=188
@@ -50,7 +54,8 @@ for k in range(10):
                 Vsts[time,i,j]=(idx1[:,i,j]*lev_km).sum()*S
                 Vnat[time,i,j]=(idx2[:,i,j]*lev_km).sum()*S
                 Vice[time,i,j]=(idx3[:,i,j]*lev_km).sum()*S
-                
+
+# Création des fichiers netcdf contenant les volumes TSTS, TNAT, TICE
 time=np.arange(0, 120, 1)
 STS = xr.DataArray(Vsts[:,:,:], dims=('time', 'lat', 'long'), coords={'time':time, 'lat':latbin, 'long':longbin})
 NAT = xr.DataArray(Vnat[:,:,:], dims=('time', 'lat', 'long'), coords={'time':time, 'lat':latbin, 'long':longbin})
