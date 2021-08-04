@@ -7,7 +7,7 @@ import numpy as np
 
 ## Calcul des volumes d'air froid (TSTS, TNAT, TICE)
 
-ds = xr.open_dataset("/home/mleroux/qsub/IPSL-CM6/SortieTa_extract_ipsl.nc")
+ds = xr.open_dataset("/home/mleroux/qsub/IPSL-CM6/SortieTa_extract_ipsl.nc")        #Choisir la sortie de modèle qu'on veut ici.
 
 lat=ds.lat
 lon=ds.lon
@@ -38,7 +38,7 @@ for k in range(86):
         idx2 = (ta[time,:,:,:] <= Tnat)
         idx3 = (ta[time,:,:,:] <= Tice)
         
-        #S vaut 39 120 km carre
+        #S vaut 39 120 km carre, surface d'une maille.
         S=141*277.5
         
         lev_km=[3.2,2.7,2.5,3.9,3.1,5.3,5.4]   #DeltaZ (altitude) entre 14km et 40.6km
