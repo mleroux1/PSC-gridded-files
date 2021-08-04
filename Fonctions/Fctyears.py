@@ -1,4 +1,8 @@
 #!/usr/bin/env python
+
+## Calcul des volumes annuels de PSC et d'air froid 
+
+# Importation des fonctions appelées et des modules
 from Fonctions import Fctmonth
 from Fonctions import FctProf
 import xarray as xr
@@ -8,7 +12,7 @@ import glob
 def volume_season(year):
     
     month_list=[1,2,3,4,5,6,7,8,9,10,11,12]
-    latsize,lonsize=(1.27,2.5)
+    latsize,lonsize=(1.27,2.5)                       # Définition des delta lat et delta long (dimension des mailles)
 
     latbin=[-79.85915 , -78.59155 , -77.323944, -76.056335, -74.788734, -73.521126,
        -72.253525, -70.985916, -69.71831 , -68.45071 , -67.1831  , -65.91549 ,
@@ -40,7 +44,7 @@ def volume_season(year):
 
     for i, month in enumerate(month_list):
         print(i, month)
-        maps7 = Fctmonth.volume_month(year, month, latsize=1.27, lonsize=2.5)
+        maps7 = Fctmonth.volume_month(year, month, latsize, lonsize)
         mSTS[0,:,:] = maps7[0]
         mTsts[0,:,:] = maps7[1]
         mNAT[0,:,:] = maps7[2]
@@ -48,7 +52,8 @@ def volume_season(year):
         mICE[0,:,:] = maps7[4]
         mTice[0,:,:] = maps7[5]
         mprofils[0,:,:]=maps7[6]
-
+        
+        # Création fichiers netcdf contenant les volumes de PSC et d'air froid
         time=['%04d-%02d' % (year, month)]
     
         mSTSx = xr.DataArray(mSTS, dims=('time', 'lat', 'long'), coords={'time':time, 'lat':latbin, 'long':longbin})
