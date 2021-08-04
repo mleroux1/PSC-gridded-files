@@ -1,4 +1,8 @@
 #!/usr/bin/env python
+
+## Calcul du nombre de profils CALIPSO tombant dans les mailles du modèles
+
+# Importation modules
 import numpy as np
 import xarray as xr
 import matplotlib.pyplot as plt
