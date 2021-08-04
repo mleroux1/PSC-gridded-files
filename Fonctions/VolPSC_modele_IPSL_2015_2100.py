@@ -2,7 +2,7 @@
 import xarray as xr
 import numpy as np
 
-ds = xr.open_mfdataset('/home/mleroux/qsub/IPSL-CM6/newVOL_IPSL.nc')
+ds = xr.open_mfdataset('/home/mleroux/qsub/IPSL-CM6/VolT_IPSL_2015_2100.nc')          # Ouverture du fichiers netcdf contenant les volumes de températures froides.
 
 time=np.arange(0, 1032, 1)
 
@@ -36,17 +36,15 @@ for k in range(1032):
     for i in range(24):
         for j in range(144):
             
-            xsts=ds.Vsts[k,i,j].values
-            volSTS= 0.0478*xsts
-            VpscSTS[k,i,j]=volSTS
+            VTsts=ds.VTsts[k,i,j].values                                                        ## VTsts, VTnat, VTice, volumes d'air froid seuils.
+            VpscSTS[k,i,j]= 0.0478*VTsts                                                        # Formule obtenue par régression polynomiale sur un scatterplot reliant volumes de T et volumes de PSC
+                                                                                               ## Pareil pour les deux équations suivantes VpscNAT et VpscICE
             
-            xnat=ds.Vnat[k,i,j].values
-            volNAT= 8.239e-19*(xnat**4) - 5.383e-13*(xnat**3) + 1.072e-07*(xnat**2) + 0.1808*xnat
-            VpscNAT[k,i,j]=volNAT  
+            VTnat=ds.VTnat[k,i,j].values
+            VpscNAT[k,i,j]= 8.239e-19*(VTnat**4) - 5.383e-13*(VTnat**3) + 1.072e-07*(VTnat**2) + 0.1808*VTnat
             
-            xice=ds.Vice[k,i,j].values
-            volICE= 3.855e-08*(xice**2) + 0.1082*(xice)
-            VpscICE[k,i,j]=volICE
+            VTice=ds.VTice[k,i,j].values
+            VpscICE[k,i,j]= 3.855e-08*(VTice**2) + 0.1082*(VTice)
             
 STS = xr.DataArray(VpscSTS, dims=('time', 'lat', 'long'), coords={'time':time, 'lat':latbin, 'long':longbin})
 NAT = xr.DataArray(VpscNAT, dims=('time', 'lat', 'long'), coords={'time':time, 'lat':latbin, 'long':longbin})
