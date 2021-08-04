@@ -1,9 +1,13 @@
+## Map de l'Antractique avec des volumes de PSC et d'air froid dans des mailles de 2°x15° (latsize, lonsize à définir)
+
+# Importation des modules
 import xarray as xr
 import numpy as np
 import matplotlib.pyplot as plt
 from mpl_toolkits.basemap import Basemap
 from matplotlib.image import pil_to_array
 
+# Définition de la projection et des limites
 m=Basemap(projection='spstere',lon_0=180,boundinglat=-60)
 
 def grid_points(latsize, lonsize, n, idx, lat, long):
@@ -34,33 +38,37 @@ def antarc_volume(filename,latsize,lonsize):
     latbin=range(-80,-50+2,latsize)
     longbin=range(-180,180+15,lonsize)
     
+# PSC STS  
     idx=(((compo.values==1).sum(axis=1))>0)
     nsts=((compo.values==1).sum(axis=1))
     mapVsts=grid_points(latsize, lonsize, nsts, idx, lat, long) 
     
+# T<T STS   
     idx=((T.values<192).sum(axis=1)>0)
     Tsts=((T.values<192).sum(axis=1))
     mapvTsts=grid_points(latsize, lonsize, Tsts, idx, lat, long)
     
-    c=((compo.values==2)|(compo.values==3)|(compo.values==5))                        
-    idx=(c.sum(axis=1)>0)
-    nnat=(c.sum(axis=1))
+# PSC NAT                     
+    idx=(((compo.values==2)|(compo.values==3)|(compo.values==5)) .sum(axis=1)>0)
+    nnat=(((compo.values==2)|(compo.values==3)|(compo.values==5)) .sum(axis=1))
     mapVnat=grid_points(latsize, lonsize, nnat, idx, lat, long)
     
+# T<TNAT  
     idx=((T.values<195.7).sum(axis=1)>0)
     Tnat=((T.values<195.7).sum(axis=1))
     mapvTnat=grid_points(latsize, lonsize, Tnat, idx, lat, long)
     
-    c=((compo.values==4)|(compo.values==6))                        
-    idx=(c.sum(axis=1)>0)
-    nice=(c.sum(axis=1))
+# PSC ICE                       
+    idx=(((compo.values==4)|(compo.values==6)).sum(axis=1)>0)
+    nice=(((compo.values==4)|(compo.values==6)).sum(axis=1))
     mapVice=grid_points(latsize, lonsize, nice, idx, lat, long)
     
+#T<TICE
     idx=((T.values<188.5).sum(axis=1)>0)
     Tice=((T.values<188.5).sum(axis=1))
     mapvTice=grid_points(latsize, lonsize, Tice, idx, lat, long)
 
-
+# Tracer des six figures
     plt.figure(figsize=(7,7))
     x,y = m(*np.meshgrid(longbin,latbin))
     h1=m.pcolormesh(x,y,mapVsts)
