@@ -1,7 +1,12 @@
 #!/usr/bin/env python
+
+## Calcul des volumes de PSC (STS, NAT, ICE) à partir d'un modèle sur la période 2007 à 2016.
+
+# Importation des modules
 import xarray as xr
 import numpy as np
 
+# Ouverture fichiers des volumes d'air froids
 ds = xr.open_mfdataset('/home/mleroux/qsub/IPSL-CM6/VolT_IPSL_2007_2016.nc')
 
 time=np.arange(0, 120, 1)
@@ -44,11 +49,11 @@ for k in range(120):
             
             VTice=ds.VTice[k,i,j].values
             VpscICE[k,i,j]=3.855e-08*(VTice**2) + 0.1082*(VTice)
-            
+       
+# Création fichiers netcdf pour ranger les volumes de PSC          
 STS = xr.DataArray(VpscSTS, dims=('time', 'lat', 'long'), coords={'time':time, 'lat':latbin, 'long':longbin})
 NAT = xr.DataArray(VpscNAT, dims=('time', 'lat', 'long'), coords={'time':time, 'lat':latbin, 'long':longbin})
 ICE = xr.DataArray(VpscICE, dims=('time', 'lat', 'long'), coords={'time':time, 'lat':latbin, 'long':longbin})
-
     
 data = xr.Dataset({'vol_STS':STS,'vol_NAT':NAT,'vol_ICE':ICE})
 data.to_netcdf('VolPSC_modele_IPSL_2007_2016.nc')
