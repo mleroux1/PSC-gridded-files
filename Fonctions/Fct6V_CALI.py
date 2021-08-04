@@ -1,7 +1,12 @@
 #!/usr/bin/env python
+
+## Fonction pour calculer les volumes de PSC (STS, NAT, ICE) et des volumes d'air froid (T<TSTS, T<TNAT, T<TICE) à partir des observations CALIPSO.
+
+# Importation modules
 import xarray as xr
 import numpy as np
 
+# Définition d'une grille 2D contenant les volumes de n (avec n=STS ou NAT ou TICE etc..)
 def grid_points(latsize, lonsize, n, idx, lat, long):
     
     latbin=np.arange(-80,-50+2,latsize)
@@ -21,6 +26,7 @@ def grid_points(latsize, lonsize, n, idx, lat, long):
     return mapV
 
 
+# Calcul des volumes journaliers à partir d'un fichier hdf
 def map_volume(filemonth,latsize,lonsize):
     try:
         data=xr.open_dataset(filemonth)
