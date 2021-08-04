@@ -1,8 +1,13 @@
 #!/usr/bin/env python
+
+## Calcul des volumes de PSC (STS, NAT, ICE) à partir des volumes d'ai froid (TSTS, TNAT, TICE) calculés par la fonction VolT_IPSL_2015_2100.py
+
+# Importation des modules
 import xarray as xr
 import numpy as np
 
-ds = xr.open_mfdataset('/home/mleroux/qsub/IPSL-CM6/VolT_IPSL_2015_2100.nc')          # Ouverture du fichiers netcdf contenant les volumes de températures froides.
+# Ouverture du fichiers netcdf contenant les volumes de températures froides.
+ds = xr.open_mfdataset('/home/mleroux/qsub/IPSL-CM6/VolT_IPSL_2015_2100.nc')  
 
 time=np.arange(0, 1032, 1)
 
@@ -36,20 +41,19 @@ for k in range(1032):
     for i in range(24):
         for j in range(144):
             
-            VTsts=ds.VTsts[k,i,j].values                                                        ## VTsts, VTnat, VTice, volumes d'air froid seuils.
-            VpscSTS[k,i,j]= 0.0478*VTsts                                                        # Formule obtenue par régression polynomiale sur un scatterplot reliant volumes de T et volumes de PSC
-                                                                                               ## Pareil pour les deux équations suivantes VpscNAT et VpscICE
-            
+            VTsts=ds.VTsts[k,i,j].values                # VTsts, VTnat, VTice, volumes d'air froid seuils.
+            VpscSTS[k,i,j]= 0.0478*VTsts                # Formules (VpscSTS, VpscNAT, VpscICE) obtenues par régression polynomiale sur un scatterplot reliant volumes d'air froid et volumes de PSC issus des observations CALIPSO.
+                                                                                               
             VTnat=ds.VTnat[k,i,j].values
             VpscNAT[k,i,j]= 8.239e-19*(VTnat**4) - 5.383e-13*(VTnat**3) + 1.072e-07*(VTnat**2) + 0.1808*VTnat
             
             VTice=ds.VTice[k,i,j].values
             VpscICE[k,i,j]= 3.855e-08*(VTice**2) + 0.1082*(VTice)
-            
+       
+# Création des fichiers netcdf contenant les volumes de PSC           
 STS = xr.DataArray(VpscSTS, dims=('time', 'lat', 'long'), coords={'time':time, 'lat':latbin, 'long':longbin})
 NAT = xr.DataArray(VpscNAT, dims=('time', 'lat', 'long'), coords={'time':time, 'lat':latbin, 'long':longbin})
 ICE = xr.DataArray(VpscICE, dims=('time', 'lat', 'long'), coords={'time':time, 'lat':latbin, 'long':longbin})
 
-    
 data = xr.Dataset({'vol_STS':STS,'vol_NAT':NAT,'vol_ICE':ICE})
 data.to_netcdf('VolPSC_modele_IPSL_2015_2100.nc')
