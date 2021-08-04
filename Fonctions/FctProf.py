@@ -1,4 +1,8 @@
 #!/usr/bin/env python
+
+## Calcul du nombre de profils CALIPSO tombant dans les mailles du modèle.
+
+# Importation modules
 import numpy as np
 import xarray as xr
 import matplotlib.pyplot as plt
@@ -9,11 +13,11 @@ def nb_profils(nom_fichier,latsize,lonsize):
     lat=data.Latitude
     long=data.Longitude
 
-   
     latbin=np.arange(-80,-50+2,2)
     longbin=np.arange(-180,180+15,15)
     mapprof=np.zeros([len(latbin),len(longbin)])
     
+    # A activer si on travail avec des longitudes non définies entre -180° et 180°, comme avec les sorties de modèles CMIP6
     #idx=(long<0)
     #long[idx]=long[idx]+360.
 
