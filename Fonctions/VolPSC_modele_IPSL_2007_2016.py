@@ -36,14 +36,14 @@ for k in range(120):
     for i in range(24):
         for j in range(144):
             
-            xsts=ds.VTsts[k,i,j].values
-            VpscSTS[k,i,j]=0.0478*xsts
+            VTsts=ds.VTsts[k,i,j].values
+            VpscSTS[k,i,j]=0.0478*VTsts
             
-            xnat=ds.VTnat[k,i,j].values
-            VpscNAT[k,i,j]=8.239e-19*(xnat**4) - 5.383e-13*(xnat**3) + 1.072e-07*(xnat**2) + 0.1808*xnat
+            VTnat=ds.VTnat[k,i,j].values
+            VpscNAT[k,i,j]=8.239e-19*(VTnat**4) - 5.383e-13*(VTnat**3) + 1.072e-07*(VTnat**2) + 0.1808*VTnat
             
-            xice=ds.VTice[k,i,j].values
-            VpscICE[k,i,j]=3.855e-08*(xice**2) + 0.1082*(xice)
+            VTice=ds.VTice[k,i,j].values
+            VpscICE[k,i,j]=3.855e-08*(VTice**2) + 0.1082*(VTice)
             
 STS = xr.DataArray(VpscSTS, dims=('time', 'lat', 'long'), coords={'time':time, 'lat':latbin, 'long':longbin})
 NAT = xr.DataArray(VpscNAT, dims=('time', 'lat', 'long'), coords={'time':time, 'lat':latbin, 'long':longbin})
