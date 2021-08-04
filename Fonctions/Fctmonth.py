@@ -1,11 +1,17 @@
 #!/usr/bin/env python
-import glob
+
+## Calcul des volumes de PSC et d'air froid mensuels à partir des fonctions Fct6V_CALI ou Fct6V_CMIP6 
+
+# Importation des modules et des fonctions utiles
 from Fonctions import Fct6V_CMIP6
-#from Fonctions import Fct6V_CALI    #Choisir la fonction de départ en fonction de la taille des mailles qu'on veut
+#from Fonctions import Fct6V_CALI    
 from Fonctions import FctProf
+
 import numpy as np 
 import xarray as xr
+import glob
 
+# Calcul volumes mensuels en fonction de l'année et du mois
 def volume_month(year, month, latsize, lonsize):
     filesmonth=sorted(glob.glob('/bdd/CALIPSO/Lidar_L2/LID_L2_PSCMask-Prov-V1-00/%04d/%02d/*.hdf' % (year, month)))
 
@@ -40,18 +46,17 @@ def volume_month(year, month, latsize, lonsize):
     vTice=np.zeros([len(latbin),len(longbin)])
     nbp=np.zeros([len(latbin),len(longbin)])
 
-
-    for k in range(len(filesmonth)):
-        
+    for k in range(len(filesmonth)):        
         if k % 2 == 0:
             print('file #%02d/%02d' % (k, len(filesmonth)))
         
         y=Fct6V_CMIP6.map_volume(filesmonth[k],latsize,lonsize)
-       # y=Fct6V_CALI.map_volume(filesmonth[k],latsize,lonsize)
+       #y=Fct6V_CALI.map_volume(filesmonth[k],latsize,lonsize)
         if y is None:
             continue
         x=FctProf.nb_profils(filesmonth[k],latsize,lonsize)
-
+        
+# Attention somme donc il va falloir diviser par le nombre de jour (donc de fichiers) pour normaliser
         vSTS=vSTS+y[0]
         vTsts=vTsts+y[1]
         vNAT=vNAT+y[2]
