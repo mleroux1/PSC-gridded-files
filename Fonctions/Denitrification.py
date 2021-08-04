@@ -8,7 +8,7 @@ import xarray as xr
 import matplotlib.pyplot as plt
 
 
-def denitrification(filesmonth,latsize,lonsize):
+def denitri(filesmonth,latsize,lonsize):
     try:
         data=xr.open_dataset(filesmonth, engine='pynio')
     except:
